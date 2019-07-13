@@ -9,18 +9,29 @@
     <meta charset="utf-8">
     <title>GIPHY</title>
     <style type="text/css">
-        button,
-        div,
-        form,
-        input {
+        button {
+            background-color: burlywood;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+        div {
+            background-color: beige;
+        }
+
+        form input {
             margin: 10px;
+
+        }
+
+        #add-gifs {
+            background-color: burlywood;
         }
     </style>
 </head>
 
 <body>
     <div class="container">
-
 
         <div id="buttons-view"></div>
 
@@ -29,10 +40,8 @@
             <input type="text" id="gif-input">
             <br>
 
-
             <input id="add-gifs" type="submit" value="add gifs ">
         </form>
-
 
         <div id="gifs-view"></div>
 
@@ -43,7 +52,6 @@
             function getGifs() {
                 var APIKey = "XDWAo3gdeLFUgRqyYAXfy33QO40hbilW";
 
-
                 var value = $(this).attr("data-name");
                 var queryURL = "http://api.giphy.com/v1/gifs/search?q=" + value + "&api_key=" + APIKey + "&limit=10&rating=pg";
                 $.ajax({
@@ -53,8 +61,7 @@
                 }).then(function (response) {
                     $("#gifs-view").empty()
                     for (let i = 0; i < response.data.length; i++) {
-                        console.log(response.data[i])
-
+                        
 
                         var gifsDiv = $("<div class='gifs'>");
                         gifsDiv.text("rating: " + response.data[i].rating)
@@ -92,16 +99,13 @@
             $("#add-gifs").click(function (e) {
                 e.preventDefault()
                 var newGif = $("#gif-input").val()
-                console.log(newGif)
                 gifs.push(newGif);
                 renderButtons()
             })
             $(document).on("click", '.gif', function () {
-                // The attr jQuery method allows us to get or set the value of any attribute on our HTML element
+
                 var state = $(this).attr("data-state");
-                // If the clicked image's state is still, update its src attribute to what its data-animate value is.
-                // Then, set the image's data-state to animate
-                // Else set src to the data-still value
+
                 if (state === "still") {
                     $(this).attr("src", $(this).attr("data-active"));
                     $(this).attr("data-state", "animate");
@@ -112,13 +116,6 @@
             });
             renderButtons()
             $(document).on("click", ".gif-btn", getGifs);
-
-
-
-
-
-
-
 
 
 
