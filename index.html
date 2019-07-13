@@ -19,74 +19,99 @@
 </head>
 
 <body>
-    <!-- <div class="container">
-                
-                <!-- Rendered Buttons will get Dumped Here  -->
-    <div id="buttons-view"></div>
-
-    <form id="gif-form">
-        <label for="gif-input">Add gifs</label>
-        <input type="text" id="gif-input">
-        <br>
+    <div class="container">
 
 
-        <input id="add-gifs" type="submit" value="add gifs ">
-    </form>
+        <div id="buttons-view"></div>
+
+        <form id="gif-form">
+            <label for="gif-input">Add gifs</label>
+            <input type="text" id="gif-input">
+            <br>
 
 
-    <div id="gifs-view"></div>
+            <input id="add-gifs" type="submit" value="add gifs ">
+        </form>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script type="text/javascript">
 
-        var gifs = ["nba the jump", "nba first take", "nba meme", "nba tnt"]
+        <div id="gifs-view"></div>
 
-        var APIKey = "XDWAo3gdeLFUgRqyYAXfy33QO40hbilW";
-        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script type="text/javascript">
 
-        // var gifs = $(this).attr("data-name");
-        var queryURL = "http://api.giphy.com/v1/gifs/search?q=" + gifs + "&api_key=" + APIKey + "&limit=10";
-        $.ajax({
-            url: queryURL,
-            method: "GET"
+            var gifs = ["nba the jump", "nba first take", "nba meme", "nba tnt"]
+            function getGifs() {
+                var APIKey = "XDWAo3gdeLFUgRqyYAXfy33QO40hbilW";
 
-        }).then(function (response) {
-            var gifsDiv = $("<div class='gifs'>");
-            var imgURL = response.images;
 
-            var image = $("<img>").attr("src", imgURL);
+                var value = $(this).attr("data-name");
+                var queryURL = "http://api.giphy.com/v1/gifs/search?q=" + value + "&api_key=" + APIKey + "&limit=10&rating=pg";
+                $.ajax({
+                    url: queryURL,
+                    method: "GET"
 
-            gifsDiv.append(image);
+                }).then(function (response) {
+                    $("#gifs-view").empty()
+                    for (let i = 0; i < response.data.length; i++) {
+                        console.log(response.data[i])
 
-            $("#gifs-view").html(JSON.stringify(response));
-            console.log(response)
-        });
-        function renderButtons() {
-            $("#buttons-view").empty();
-            console.log(gifs)
-            for (var i = 0; i < gifs.length; i++) {
 
-                var a = $("<button>");
+                        var gifsDiv = $("<div class='gifs'>");
+                        gifsDiv.text("rating: " + response.data[i].rating)
+                        var imgURLStill = response.data[i].images.original_still.url;
+                        var imgURL = response.data[i].images.original.url;
+                        var image = $("<img>").attr("src", imgURLStill);
+                        image.attr("data-still", imgURLStill)
+                        image.attr("data-active", imgURL)
+                        image.attr('data-state', "still")
+                        image.addClass('gif')
+                        gifsDiv.append(image);
 
-                a.addClass("gif-btn");
-
-                a.attr("data-name", gifs[i]);
-
-                a.text(gifs[i]);
-
-                $("#buttons-view").append(a);
+                        $("#gifs-view").append(gifsDiv);
+                    }
+                });
             }
+            function renderButtons() {
+                $("#buttons-view").empty();
+                console.log(gifs)
+                for (var i = 0; i < gifs.length; i++) {
+
+                    var a = $("<button>");
+
+                    a.addClass("gif-btn");
+
+                    a.attr("data-name", gifs[i]);
+
+                    a.text(gifs[i]);
+
+                    $("#buttons-view").append(a);
+                }
 
 
-         }
-         $("#add-gifs").click(function(e){
-             e.preventDefault()
-             var newGif = $("#gif-input").val()
-             console.log(newGif)
-             gifs.push(newGif);
-             renderButtons()
-         })
-         renderButtons()
+            }
+            $("#add-gifs").click(function (e) {
+                e.preventDefault()
+                var newGif = $("#gif-input").val()
+                console.log(newGif)
+                gifs.push(newGif);
+                renderButtons()
+            })
+            $(document).on("click", '.gif', function () {
+                // The attr jQuery method allows us to get or set the value of any attribute on our HTML element
+                var state = $(this).attr("data-state");
+                // If the clicked image's state is still, update its src attribute to what its data-animate value is.
+                // Then, set the image's data-state to animate
+                // Else set src to the data-still value
+                if (state === "still") {
+                    $(this).attr("src", $(this).attr("data-active"));
+                    $(this).attr("data-state", "animate");
+                } else {
+                    $(this).attr("src", $(this).attr("data-still"));
+                    $(this).attr("data-state", "still");
+                }
+            });
+            renderButtons()
+            $(document).on("click", ".gif-btn", getGifs);
 
 
 
@@ -97,7 +122,7 @@
 
 
 
-    </script>
+        </script>
     </div>
 </body>
 
