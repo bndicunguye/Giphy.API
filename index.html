@@ -53,7 +53,7 @@
                 var APIKey = "XDWAo3gdeLFUgRqyYAXfy33QO40hbilW";
 
                 var value = $(this).attr("data-name");
-                var queryURL = "http://api.giphy.com/v1/gifs/search?q=" + value + "&api_key=" + APIKey + "&limit=10&rating=pg";
+                var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + value + "&api_key=" + APIKey + "&limit=10&rating=pg";
                 $.ajax({
                     url: queryURL,
                     method: "GET"
@@ -98,8 +98,8 @@
             }
             $("#add-gifs").click(function (e) {
                 e.preventDefault()
-                var newGif = $("#gif-input").val()
-                gifs.push(newGif);
+                 var newGif = $("#gif-input").val()
+                 gifs.push(newGif);
                 renderButtons()
             })
             $(document).on("click", '.gif', function () {
